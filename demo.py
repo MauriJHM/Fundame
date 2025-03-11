@@ -1,5 +1,5 @@
 # prompt: imprimir dataframe usando streamlit
-
+import plotly.express as px
 import streamlit as st
 import pandas as pd
 
