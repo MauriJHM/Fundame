@@ -30,12 +30,23 @@ except FileNotFoundError:
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
 
-# Crear un filtro de selección para la columna Región
-region_seleccionada = st.sidebar.selectbox('Seleccione la Región', df['Región'].unique())
+# prompt: usando el dataframe df, crear un filtro con la columna region
 
-# Filtrar el DataFrame basado en la selección
-df_filtrado = df[df['Región'] == region_seleccionada]
+# Assuming 'df' is your DataFrame and 'Region' is a column in it.
+# Check if the 'Region' column exists
+if 'Region' in df.columns:
+  # Get unique region values
+  unique_regions = df['Region'].unique()
 
-# Mostrar el DataFrame filtrado
-st.write(f"DataFrame filtrado por la región: {region_seleccionada}")
-st.dataframe(df_filtrado)
+  # Create a multiselect widget
+  selected_regions = st.multiselect("Select Region(s)", unique_regions)
+
+  # Filter the DataFrame based on selected regions
+  if selected_regions:
+    filtered_df = df[df['Region'].isin(selected_regions)]
+    st.dataframe(filtered_df)
+  else:
+    st.write("Please select at least one region.")
+else:
+  st.error("The 'Region' column does not exist in the DataFrame.")
+
