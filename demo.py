@@ -30,26 +30,45 @@ except FileNotFoundError:
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
 
-# prompt: usando el dataframe df, crear un filtro con la columna region
+# prompt: usando el dataframe df, crear un filtro con la columna region y otro con la columna state
 
-# Suponiendo que 'df' ya está definido y contiene la columna 'Region'
+import pandas as pd
+import streamlit as st
+import plotly.express as px
 
-# Crea un filtro para seleccionar filas donde la región sea igual a 'Norte'
-region_filtro = df['Region'] == 'Norte'  # Reemplaza 'Norte' con la región deseada
+# Lee el archivo Excel
+try:
+    df = pd.read_excel('SalidaFinalVentas.xlsx')
 
-# Aplica el filtro al DataFrame
-df_filtrado = df[region_filtro]
+    # Filtro para la columna 'Region'
+    selected_region = st.selectbox('Selecciona una Región', df['Region'].unique())
+    filtered_df_region = df[df['Region'] == selected_region]
 
-# Muestra el DataFrame filtrado
-print(df_filtrado)
+    # Filtro para la columna 'State'
+    selected_state = st.selectbox('Selecciona un Estado', df['State'].unique()) # Asumiendo que tienes una columna 'State'
+    filtered_df_state = df[df['State'] == selected_state]
 
 
-# En Streamlit:
-# Crea un selector de regiones
-selected_region = st.selectbox('Selecciona una Región', df['Region'].unique())
+    # Mostrar los DataFrames filtrados
+    st.write("DataFrame filtrado por Región:")
+    st.dataframe(filtered_df_region)
 
-# Filtra el DataFrame según la región seleccionada
-filtered_df = df[df['Region'] == selected_region]
+    st.write("DataFrame filtrado por Estado:")
+    st.dataframe(filtered_df_state)
 
-# Muestra el DataFrame filtrado
-st.dataframe(filtered_df)
+
+    # Verifica si la columna 'Region' existe en el DataFrame
+    if 'Region' in df.columns:
+        # Crea la gráfica de ventas por región
+        fig = px.bar(df, x='Region', y='Ventas', title='Ventas por Región') # Reemplaza 'Ventas' con el nombre de tu columna de ventas
+        st.plotly_chart(fig)
+    else:
+        st.error("La columna 'Region' no se encuentra en el archivo.")
+
+    st.dataframe(df) # Muestra el DataFrame en Streamlit
+except FileNotFoundError:
+    st.error("El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
+except KeyError as e:
+    st.error(f"La columna '{e}' no se encuentra en el archivo.")
+except Exception as e:
+    st.error(f"Ocurrió un error al leer el archivo o procesar los datos: {e}")
