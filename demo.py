@@ -30,34 +30,26 @@ except FileNotFoundError:
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
 
-# prompt: usando el dataframe df, crear un filtro con la columna region que sea sidebar
+# prompt: usando el dataframe df, crear un filtro con la columna region
 
-import pandas as pd
-import streamlit as st
-import plotly.express as px
+# Suponiendo que 'df' ya está definido y contiene la columna 'Region'
 
-# Lee el archivo Excel
-try:
-  df = pd.read_excel('SalidaFinalVentas.xlsx')
+# Crea un filtro para seleccionar filas donde la región sea igual a 'Norte'
+region_filtro = df['Region'] == 'Norte'  # Reemplaza 'Norte' con la región deseada
 
-  # Verifica si la columna 'Region' existe en el DataFrame
-  if 'Region' in df.columns:
-    # Crea un filtro para la columna "Region" en la barra lateral
-    selected_region = st.sidebar.selectbox("Selecciona una región", df['Region'].unique())
+# Aplica el filtro al DataFrame
+df_filtrado = df[region_filtro]
 
-    # Filtra el DataFrame según la selección del usuario
-    filtered_df = df[df['Region'] == selected_region]
+# Muestra el DataFrame filtrado
+print(df_filtrado)
 
-    # Crea la gráfica de ventas por región con los datos filtrados
-    fig = px.bar(filtered_df, x='Region', y='Ventas', title=f'Ventas por Región ({selected_region})')
-    st.plotly_chart(fig)
 
-    # Muestra el DataFrame filtrado
-    st.dataframe(filtered_df)
-  else:
-      st.error("La columna 'Region' no se encuentra en el archivo.")
+# En Streamlit:
+# Crea un selector de regiones
+selected_region = st.selectbox('Selecciona una Región', df['Region'].unique())
 
-except FileNotFoundError:
-  st.error("El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
-except Exception as e:
-  st.error(f"Ocurrió un error al leer el archivo: {e}")
+# Filtra el DataFrame según la región seleccionada
+filtered_df = df[df['Region'] == selected_region]
+
+# Muestra el DataFrame filtrado
+st.dataframe(filtered_df)
