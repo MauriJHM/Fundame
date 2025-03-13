@@ -49,3 +49,11 @@ else:
 
 
 st.dataframe(filtered_df)
+
+# Create the pie chart based on the 'State' column
+if 'State' in filtered_df.columns:
+    fig_pie = px.pie(filtered_df, names='State', title='Distribution by State')
+    st.plotly_chart(fig_pie)
+else:
+    st.error("The 'State' column is not found in the DataFrame.")
+
