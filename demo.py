@@ -30,23 +30,28 @@ except FileNotFoundError:
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
 
-# prompt: usando el dataframe df, crear un filtro con la columna region
+# prompt: usando el dataframe df, crear un filtro con la columna region que sea sidebar
 
-# Assuming 'df' is your DataFrame and 'Region' is a column in it.
-# Check if the 'Region' column exists
-if 'Region' in df.columns:
-  # Get unique region values
-  unique_regions = df['Region'].unique()
+# Lee el archivo Excel
+try:
+  df = pd.read_excel('SalidaFinalVentas.xlsx')
 
-  # Create a multiselect widget
-  selected_regions = st.multiselect("Select Region(s)", unique_regions)
+  # Verifica si la columna 'Region' existe en el DataFrame
+  if 'Region' in df.columns:
+    # Filtra el DataFrame para mostrar solo las filas donde 'Region' es 'sidebar'
+    df_sidebar = df[df['Region'] == 'sidebar']
 
-  # Filter the DataFrame based on selected regions
-  if selected_regions:
-    filtered_df = df[df['Region'].isin(selected_regions)]
-    st.dataframe(filtered_df)
+    # Crea la gráfica de ventas por región (opcional, puedes comentar si no la necesitas)
+    # fig = px.bar(df_sidebar, x='Region', y='Ventas', title='Ventas por Región (Sidebar)') # Reemplaza 'Ventas' con el nombre de tu columna de ventas
+    # st.plotly_chart(fig)
+
+    st.dataframe(df_sidebar) # Muestra el DataFrame filtrado en Streamlit
   else:
-    st.write("Please select at least one region.")
-else:
-  st.error("The 'Region' column does not exist in the DataFrame.")
+      st.error("La columna 'Region' no se encuentra en el archivo.")
+
+  # El resto del código...
+except FileNotFoundError:
+  st.error("El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
+except Exception as e:
+  st.error(f"Ocurrió un error al leer el archivo: {e}")
 
