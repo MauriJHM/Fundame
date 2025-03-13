@@ -30,39 +30,22 @@ except FileNotFoundError:
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
 
-    # Lee el archivo Excel
-try:
-    df = pd.read_excel('SalidaFinalVentas.xlsx')
+    # prompt: usando el dataframe df, crear un filtro con la columna region y otro con la columna state donde el resultado sea en una misma tabla
 
-    # Filtro para la columna 'Region'
-    selected_region = st.selectbox('Selecciona una Región', df['Region'].unique())
-    filtered_df_region = df[df['Region'] == selected_region]
+# Assuming 'df' is your DataFrame and it has columns named 'Region' and 'State'
 
-    # Filtro para la columna 'State'
-    selected_state = st.selectbox('Selecciona un Estado', df['State'].unique()) # Asumiendo que tienes una columna 'State'
-    filtered_df_state = df[df['State'] == selected_state]
+region_filter = st.multiselect("Select Region", df['Region'].unique())
+state_filter = st.multiselect("Select State", df['State'].unique())
 
 
-    # Mostrar los DataFrames filtrados
-    st.write("DataFrame filtrado por Región:")
-    st.dataframe(filtered_df_region)
+if region_filter and state_filter :
+  filtered_df = df[(df['Region'].isin(region_filter)) & (df['State'].isin(state_filter))]
+elif region_filter:
+  filtered_df = df[df['Region'].isin(region_filter)]
+elif state_filter:
+  filtered_df = df[df['State'].isin(state_filter)]
+else:
+  filtered_df = df # No filter applied
 
-    st.write("DataFrame filtrado por Estado:")
-    st.dataframe(filtered_df_state)
 
-
-    # Verifica si la columna 'Region' existe en el DataFrame
-    if 'Region' in df.columns:
-        # Crea la gráfica de ventas por región
-        fig = px.bar(df, x='Region', y='Ventas', title='Ventas por Región') # Reemplaza 'Ventas' con el nombre de tu columna de ventas
-        st.plotly_chart(fig)
-    else:
-        st.error("La columna 'Region' no se encuentra en el archivo.")
-
-    st.dataframe(df) # Muestra el DataFrame en Streamlit
-except FileNotFoundError:
-    st.error("El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
-except KeyError as e:
-    st.error(f"La columna '{e}' no se encuentra en el archivo.")
-except Exception as e:
-    st.error(f"Ocurrió un error al leer el archivo o procesar los datos: {e}")
+st.dataframe(filtered_df)
