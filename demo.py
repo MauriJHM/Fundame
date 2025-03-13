@@ -30,6 +30,10 @@ except FileNotFoundError:
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
 
+    # Lee el archivo Excel
+try:
+    df = pd.read_excel('SalidaFinalVentas.xlsx')
+
     # Filtro para la columna 'Region'
     selected_region = st.selectbox('Selecciona una Región', df['Region'].unique())
     filtered_df_region = df[df['Region'] == selected_region]
