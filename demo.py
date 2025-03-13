@@ -32,26 +32,32 @@ except Exception as e:
 
 # prompt: usando el dataframe df, crear un filtro con la columna region que sea sidebar
 
+import pandas as pd
+import streamlit as st
+import plotly.express as px
+
 # Lee el archivo Excel
 try:
   df = pd.read_excel('SalidaFinalVentas.xlsx')
 
   # Verifica si la columna 'Region' existe en el DataFrame
   if 'Region' in df.columns:
-    # Filtra el DataFrame para mostrar solo las filas donde 'Region' es 'sidebar'
-    df_sidebar = df[df['Region'] == 'sidebar']
+    # Crea un filtro para la columna "Region" en la barra lateral
+    selected_region = st.sidebar.selectbox("Selecciona una región", df['Region'].unique())
 
-    # Crea la gráfica de ventas por región (opcional, puedes comentar si no la necesitas)
-    # fig = px.bar(df_sidebar, x='Region', y='Ventas', title='Ventas por Región (Sidebar)') # Reemplaza 'Ventas' con el nombre de tu columna de ventas
-    # st.plotly_chart(fig)
+    # Filtra el DataFrame según la selección del usuario
+    filtered_df = df[df['Region'] == selected_region]
 
-    st.dataframe(df_sidebar) # Muestra el DataFrame filtrado en Streamlit
+    # Crea la gráfica de ventas por región con los datos filtrados
+    fig = px.bar(filtered_df, x='Region', y='Ventas', title=f'Ventas por Región ({selected_region})')
+    st.plotly_chart(fig)
+
+    # Muestra el DataFrame filtrado
+    st.dataframe(filtered_df)
   else:
       st.error("La columna 'Region' no se encuentra en el archivo.")
 
-  # El resto del código...
 except FileNotFoundError:
   st.error("El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
-
