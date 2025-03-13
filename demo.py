@@ -30,16 +30,6 @@ except FileNotFoundError:
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
 
-# prompt: usando el dataframe df, crear un filtro con la columna region y otro con la columna state
-
-import pandas as pd
-import streamlit as st
-import plotly.express as px
-
-# Lee el archivo Excel
-try:
-    df = pd.read_excel('SalidaFinalVentas.xlsx')
-
     # Filtro para la columna 'Region'
     selected_region = st.selectbox('Selecciona una Región', df['Region'].unique())
     filtered_df_region = df[df['Region'] == selected_region]
