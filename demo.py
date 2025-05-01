@@ -29,22 +29,4 @@ except FileNotFoundError:
 except Exception as e:
   st.error(f"Ocurrió un error al leer el archivo: {e}")
 
-    # prompt: usando el dataframe df, crear un filtro con la columna region y otro con la columna state donde el resultado sea en una misma tabla
-
-# Assuming 'df' is your DataFrame and it has columns named 'Region' and 'State'
-
-region_filter = st.multiselect("Select Region", df['Region'].unique())
-state_filter = st.multiselect("Select State", df['State'].unique())
-
-
-if region_filter and state_filter :
-  filtered_df = df[(df['Region'].isin(region_filter)) & (df['State'].isin(state_filter))]
-elif region_filter:
-  filtered_df = df[df['Region'].isin(region_filter)]
-elif state_filter:
-  filtered_df = df[df['State'].isin(state_filter)]
-else:
-  filtered_df = df # No filter applied
-
-
-st.dataframe(filtered_df)
+   
