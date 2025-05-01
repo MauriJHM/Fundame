@@ -57,3 +57,32 @@ if 'State' in filtered_df.columns:
 else:
     st.error("The 'State' column is not found in the DataFrame.")
 
+ prompt: realiza una grafica de barras apilada de las ventas acumuladas por año con categoria y sub-categoria
+
+import pandas as pd
+import plotly.express as px
+
+# Lee el archivo Excel (asegúrate de que el archivo esté en el entorno de ejecución)
+try:
+    df = pd.read_excel('SalidaFinalVentas.xlsx')
+
+    # Agrupa los datos por año, categoría y subcategoría, y suma las ventas
+    ventas_acumuladas = df.groupby(['Año', 'Categoría', 'Subcategoría'])['Ventas'].sum().reset_index()
+
+    # Crea la gráfica de barras apiladas
+    fig = px.bar(ventas_acumuladas, 
+                 x='Año', 
+                 y='Ventas', 
+                 color='Subcategoría',
+                 title='Ventas Acumuladas por Año, Categoría y Subcategoría',
+                 labels={'Ventas': 'Ventas Acumuladas', 'Año': 'Año', 'Subcategoría': 'Subcategoría'},
+                 barmode='stack')  # 'stack' para barras apiladas
+
+    fig.show()  # Muestra la gráfica en el entorno de ejecución
+
+except FileNotFoundError:
+    print("Error: El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
+except KeyError as e:
+    print(f"Error: La columna '{e}' no se encontró en el archivo. Asegúrate de que las columnas 'Año', 'Categoría', 'Subcategoría' y 'Ventas' existan.")
+except Exception as e:
+    print(f"Error inesperado: {e}")
