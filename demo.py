@@ -57,7 +57,7 @@ if 'State' in filtered_df.columns:
 else:
     st.error("The 'State' column is not found in the DataFrame.")
 
- prompt: realiza una grafica de barras apilada de las ventas acumuladas por año con categoria y sub-categoria
+ #prompt: realiza una grafica de barras apilada de las ventas acumuladas por año con categoria y sub-categoria
 
 import pandas as pd
 import plotly.express as px
