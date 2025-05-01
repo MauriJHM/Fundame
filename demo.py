@@ -15,5 +15,3 @@ except Exception as e:
 # Lee el archivo Excel
 try:
   df = pd.read_excel('SalidaFinalVentas.xlsx')
-  
-  
