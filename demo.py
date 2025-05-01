@@ -53,7 +53,7 @@ if not pd.api.types.is_datetime64_any_dtype(df['Order Date']):
 
 
 # Filtrar los años (ejemplo: 2020 y 2021)
-years_to_filter = [2020, 2021]  # Ajusta los años según sea necesario
+years_to_filter = [2015, 2016, 2017, 2018]  # Ajusta los años según sea necesario
 df_filtered = df[df['Order Date'].dt.year.isin(years_to_filter)]
 
 
